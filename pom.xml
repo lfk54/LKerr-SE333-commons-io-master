@@ -281,6 +281,7 @@ file comparators, endian transformation classes, and much more.
     <checkstyle.plugin.version>2.17</checkstyle.plugin.version>
 
     <japicmp.skip>false</japicmp.skip>
+    <pitest.version>1.18.0</pitest.version>
   </properties>
 
   <build>
@@ -364,6 +365,26 @@ file comparators, endian transformation classes, and much more.
         <version>${commons.javadoc.version}</version>
         <configuration>
           <source>7</source>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <version>${pitest.version}</version>
+        <executions>
+          <execution>
+            <id>pit-report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>mutationCoverage</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <targetClasses>
+            <param>org.apache.commons.io.output.*</param>
+            <param>org.apache.commons.io.input.*</param>
+          </targetClasses>
         </configuration>
       </plugin>
     </plugins>
