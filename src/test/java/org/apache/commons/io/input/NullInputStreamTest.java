@@ -61,6 +61,16 @@ public class NullInputStreamTest {
     }
 
     @Test
+    public void testAvailableWithLargeSize() throws Exception {
+        final int largeSize = Integer.MAX_VALUE;
+        final InputStream input = new TestNullInputStream(largeSize);
+
+        assertEquals("check avail > Integer.max_value",
+                largeSize, input.available());
+    }
+
+
+    @Test
     public void testReadByteArray() throws Exception {
         final byte[] bytes = new byte[10];
         final InputStream input = new TestNullInputStream(15);
@@ -209,6 +219,13 @@ public class NullInputStreamTest {
                     e.getMessage());
         }
         input.close();
+    }
+
+    @Test
+    public void testSkipGreaterSize() throws Exception {
+        final InputStream input = new TestNullInputStream(10, true, false);
+        long position = input.skip(15);
+        assertEquals("Position greater than size should only skip available bytes", 10, position);
     }
 
 

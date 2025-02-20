@@ -16,9 +16,6 @@
  */
 package org.apache.commons.io;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,6 +28,8 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.io.output.DemuxOutputStream;
 import org.apache.commons.io.testtools.TestUtils;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Basic unit tests for the multiplexing streams.
@@ -135,6 +134,16 @@ public class DemuxTestCase {
         assertEquals("Data2", DATA2, getInput(T2));
         assertEquals("Data3", DATA3, getInput(T3));
         assertEquals("Data4", DATA4, getInput(T4));
+    }
+
+    @Test
+    public void testInputStreamNull(){
+        final DemuxInputStream input = new DemuxInputStream();
+        try {
+            input.close();
+        } catch (Exception e) {
+            fail("Method should not raise an exception, should do nothing with null input " + e);
+        }
     }
 
     private static class ReaderThread

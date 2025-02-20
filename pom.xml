@@ -385,6 +385,10 @@ file comparators, endian transformation classes, and much more.
             <param>org.apache.commons.io.output.*</param>
             <param>org.apache.commons.io.input.*</param>
           </targetClasses>
+          <mutators>
+            <param>CONDITIONALS_BOUNDARY</param>
+            <param>NEGATE_CONDITIONALS</param>
+          </mutators>
         </configuration>
       </plugin>
     </plugins>

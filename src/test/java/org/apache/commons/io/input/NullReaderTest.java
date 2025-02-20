@@ -24,6 +24,7 @@ import static org.junit.Assert.fail;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.Field;
 
 import org.junit.Test;
 
@@ -165,6 +166,20 @@ public class NullReaderTest {
                          e.getMessage());
         }
         reader.close();
+    }
+
+    @Test
+    public void testMarkAndResetNegative() throws Exception {
+        final TestNullReader reader = new TestNullReader(100, true, false);
+        Field markField = NullReader.class.getDeclaredField("mark");
+        markField.setAccessible(true);
+        markField.set(reader, -1);
+        try {
+            reader.reset();
+            fail("Expected IOException when mark < 0, but no exception was thrown.");
+        } catch (IOException e) {
+            assertEquals("Expected exception message", "No position has been marked", e.getMessage());
+        }
     }
 
     @Test

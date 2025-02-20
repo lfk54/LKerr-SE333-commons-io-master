@@ -58,6 +58,18 @@ public class BoundedInputStreamTest {
     }
 
     @Test
+    public void testReadPosEqualsMax() throws Exception {
+        final byte[] helloWorld = "Hello World".getBytes();
+        final int max = 5;
+        BoundedInputStream bounded = new BoundedInputStream(new ByteArrayInputStream(helloWorld), max);
+
+        for (int i = 0; i < max; i++) {
+            assertEquals("Reading within limit", helloWorld[i], bounded.read());
+        }
+        assertEquals("Reading after limit should return EOF", -1, bounded.read());
+    }
+
+    @Test
     public void testReadArray() throws Exception {
 
         BoundedInputStream bounded;
@@ -79,6 +91,18 @@ public class BoundedInputStreamTest {
         bounded = new BoundedInputStream(new ByteArrayInputStream(helloWorld), helloWorld.length - 6);
         compare("limit < length", hello, IOUtils.toByteArray(bounded));
     }
+
+    @Test
+    public void testReadArrayLimitedByMax() throws Exception {
+        final byte[] helloWorld = "Hello World".getBytes();
+        final int limit = 5;
+        BoundedInputStream bounded = new BoundedInputStream(new ByteArrayInputStream(helloWorld), limit);
+        byte[] buffer = new byte[helloWorld.length];
+        int bytesRead = bounded.read(buffer, 0, helloWorld.length);
+
+        assertEquals("read() should not exceed max limit", limit, bytesRead);
+    }
+
 
     private void compare(final String msg, final byte[] expected, final byte[] actual) {
         assertEquals(msg + " length", expected.length, actual.length);

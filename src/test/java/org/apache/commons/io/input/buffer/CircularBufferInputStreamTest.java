@@ -21,6 +21,9 @@ import java.util.Random;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 
 public class CircularBufferInputStreamTest {
 	private final Random rnd = new Random(1530960934483l); // System.currentTimeMillis(), when this test was written.
@@ -71,7 +74,24 @@ public class CircularBufferInputStreamTest {
 			}
 		}
 	}
-	
+	@Test
+	public void testAddWithNegativeOffset() {
+		CircularByteBuffer buffer = new CircularByteBuffer(10);
+		byte[] data = new byte[5];
+		try {
+			buffer.add(data, -1, 3);  // Invalid offset
+			fail("Expected IllegalArgumentException for negative offset");
+		} catch (IllegalArgumentException e) {
+			assertEquals("Invalid offset: -1", e.getMessage());
+		}
+		try {
+			buffer.add(data, data.length, 2);  // Invalid offset
+			fail("Expected IllegalArgumentException for offset greater than buffer size");
+		} catch (IllegalArgumentException e) {
+			assertEquals("Invalid offset: 5", e.getMessage());
+		}
+	}
+
 	/**
 	 * Create a large, but random input buffer.
 	 */

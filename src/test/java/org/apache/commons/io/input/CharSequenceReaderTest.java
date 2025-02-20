@@ -16,13 +16,12 @@
  */
 package org.apache.commons.io.input;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.io.Reader;
 
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Test case for {@link CharSequenceReader}.
@@ -75,6 +74,19 @@ public class CharSequenceReaderTest {
         assertEquals(6, reader.skip(20));
         assertEquals(-1, reader.read());
     }
+
+    @Test
+    public void testSkipWithNegativeNumber() {
+        final Reader reader = new CharSequenceReader("FooBar");
+
+        try {
+            reader.skip(-1);
+            fail("Expected IllegalArgumentException when skipping negative number");
+        } catch (IllegalArgumentException | IOException e) {
+            assertEquals("Number of characters to skip is less than zero: -1", e.getMessage());
+        }
+    }
+
 
     @Test
     public void testRead() throws IOException {
