@@ -118,6 +118,37 @@ public class CountingInputStreamTest {
             assertEquals(found, count);
         }
     }
+    @Test
+    public void testResetCountGreaterThanIntegerMax() throws IOException {
+        final long largeSize = (long) Integer.MAX_VALUE + 10;
+        final NullInputStream mock = new NullInputStream(largeSize);
+        final CountingInputStream cis = new CountingInputStream(mock);
+        IOUtils.copyLarge(cis, new NullOutputStream());
+
+        try {
+            cis.resetCount();
+            fail("Expected ArithmeticException because count is greater than Integer.MAX_VALUE");
+        } catch (ArithmeticException e) {
+            assertEquals("The byte count " + largeSize + " is too large to be converted to an int", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testResetCountIsIntegerMax() throws IOException {
+        final long largeSize = (long) Integer.MAX_VALUE;
+        final NullInputStream mock = new NullInputStream(largeSize);
+        final CountingInputStream cis = new CountingInputStream(mock);
+        IOUtils.copyLarge(cis, new NullOutputStream());
+
+        try {
+            cis.resetCount();
+        } catch (ArithmeticException e) {
+            fail("Unexpected ArithmeticException for resetCount() when byte count is exactly Integer.MAX_VALUE");
+        }
+    }
+
+
+
 
     @Test
     public void testZeroLength1() throws Exception {
